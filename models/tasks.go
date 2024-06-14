@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 )
 
@@ -44,4 +45,25 @@ func AddTask(task *Task) {
 	sequence += 1
 
 	todoList = append(todoList, task)
+}
+
+func RemoveTask(id int) error {
+	for index, value := range todoList {
+		if value.Id == id {
+			todoList = append(todoList[0:index], todoList[index+1:]...)
+			return nil
+		}
+	}
+	return errors.New("id not found")
+}
+
+func UpdateTask(task *Task, id int) error {
+	for index, value := range todoList {
+		if value.Id == id {
+			todoList[index].Title = task.Title
+			todoList[index].Description = task.Description
+			return nil
+		}
+	}
+	return errors.New("id not found")
 }
