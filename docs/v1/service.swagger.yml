@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: GoPlanner
+  description: This is a small service in go to manage a todo list.
+  version: 1.0.0
+  contact:
+    name: Axel Delille
+paths:
+  /todo:
+    get:
+      summary: Get todolist
+      operationId: getTodolist
+      tags:
+        - Todolist
+      responses:
+        '200':
+          description: A list of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      summary: Add task
+      operationId: addTask
+      tags:
+        - Todolist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskWithoutId'
+      responses:
+        '201':
+          description: Task created
+        '400':
+          description: Invalid input
+  /todo/{id}:
+    delete:
+      summary: Delete task
+      operationId: deleteTask
+      tags:
+        - Todolist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Task deleted
+        '404':
+          description: Task not found
+    put:
+      summary: Update task
+      operationId: updateTask
+      tags:
+        - Todolist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskWithoutId'
+      responses:
+        '200':
+          description: Task updated
+        '400':
+          description: Invalid input
+        '404':
+          description: Task not found
+  /version:
+    get:
+      summary: Get version
+      operationId: getVersion
+      tags:
+        - Miscellaneous
+      responses:
+        '200':
+          description: Version information
+          content:
+            text/plain:
+              schema:
+                type: string
+  /:
+    get:
+      summary: Get greetings
+      operationId: getGreetings
+      tags:
+        - Miscellaneous
+      responses:
+        '200':
+          description: Greeting message
+          content:
+            text/plain:
+              schema:
+                type: string
+  /docs:
+    get:
+      summary: Get swagger documentation
+      operationId: getSwaggerDocs
+      tags:
+        - Miscellaneous
+      responses:
+        '200':
+          description: Swagger documentation
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+    TaskWithoutId:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+tags:
+  - name: Todolist
+    description: Operations related to managing the todo list
+  - name: Miscellaneous
+    description: Other operations
